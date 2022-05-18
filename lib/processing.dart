@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
-import 'package:fruitector/camera.dart' as camera;
 import 'package:fruitector/display.dart';
+import 'package:tflite/tflite.dart';
 
 class Process extends StatefulWidget {
   Process({Key? key, this.imageFile});
@@ -22,11 +22,44 @@ class _ProcessState extends State<Process> {
   late double height, width;
   late PickedFile imageFile;
 
+  List? _result;
+  String _confidence = "";
+  String _name = "";
+
+  loadModel() async {
+    var resultant = await Tflite.loadModel(
+        labels: 'assets/labels.txt',
+        model: 'assets/final_model_flutter.tflite');
+    print('After loading model: $resultant');
+  }
+
+  applyImageModel(PickedFile file) async {
+    var res = await Tflite.runModelOnImage(
+        path: file.path,
+        numResults: 6,
+        threshold: 0.5,
+        imageMean: 127.5,
+        imageStd: 127.5);
+    setState(() {
+      _result = res;
+
+      String str = _result![0]['label'];
+      _name = str.substring(0);
+      _confidence = _result != null
+          ? (_result![0]['confidence'] * 100.0).toString().substring(0, 2) + "%"
+          : "";
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () {
+    loadModel();
+
+    Timer(const Duration(seconds: 1, milliseconds: 230), () {
       setState(() {
+        applyImageModel(imageFile);
+
         txt = 'Processing Complete';
         _isDisabledBtn = false;
         _loading = false;
@@ -223,6 +256,7 @@ class _ProcessState extends State<Process> {
 
   void _navigateToNextScreen(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => Display(imageimport1: imageFile)));
+        builder: (context) => Display(
+            imageimport1: imageFile, name: _name, confidence: _confidence)));
   }
 }

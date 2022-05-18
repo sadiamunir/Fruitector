@@ -1,6 +1,3 @@
-// ignore_for_file: unnecessary_new
-
-import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fruitector/processing.dart';
@@ -165,8 +162,8 @@ class _CameraScreenState extends State<CameraScreen> {
                           ],
                         )
                       : Container(
-                          height: height * 0.8,
-                          width: width * 0.9,
+                          height: height * 0.4,
+                          width: width * 0.4,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(30),
                             child: Image.file(File((imageFile!.path))),
@@ -199,24 +196,43 @@ class _CameraScreenState extends State<CameraScreen> {
                     onPressed: () {
                       _showChoiceDialog(context);
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const <Widget>[
-                        Icon(
-                          Icons.search_outlined,
-                          size: 30,
-                          color: Colors.white,
-                        ),
-                        Text(
-                          "Add Image",
-                          style: TextStyle(
-                            fontFamily: 'Alata',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15.0,
+                    child: (imageFile == null)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: const <Widget>[
+                              Icon(
+                                Icons.search_outlined,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              Text(
+                                "Add Image",
+                                style: TextStyle(
+                                  fontFamily: 'Alata',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                ),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: const <Widget>[
+                              Icon(
+                                Icons.replay_circle_filled_outlined,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              Text(
+                                "Re-Upload",
+                                style: TextStyle(
+                                  fontFamily: 'Alata',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
                 Container(
@@ -297,10 +313,6 @@ class _CameraScreenState extends State<CameraScreen> {
     Navigator.pop(context);
     isDisabledBtn = false;
   }
-
-  // _returnPicture(BuildContext context) {
-  //   return imageFile.path;
-  // }
 
   void _navigateToNextScreen(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(

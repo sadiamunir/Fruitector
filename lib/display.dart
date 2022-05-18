@@ -1,24 +1,37 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, deprecated_member_use
 
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'mobile.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:url_launcher/url_launcher.dart';
 
 class Display extends StatefulWidget {
   PickedFile imageimport1;
-  Display({Key? key, required this.imageimport1}) : super(key: key);
+  String name;
+  String confidence;
+  Display(
+      {Key? key,
+      required this.imageimport1,
+      required this.confidence,
+      required this.name})
+      : super(key: key);
 
   @override
-  _DisplayState createState() => _DisplayState(imageimport1);
+  _DisplayState createState() => _DisplayState(imageimport1, confidence, name);
 }
 
 class _DisplayState extends State<Display> {
   late double height, width;
   PickedFile imageimport1;
-  _DisplayState(this.imageimport1);
+  String name;
+  String confidence;
+
+  late final _url;
+
+  _DisplayState(this.imageimport1, this.confidence, this.name);
 
   @override
   Widget build(BuildContext context) {
@@ -102,11 +115,28 @@ class _DisplayState extends State<Display> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
-                              const Text(
-                                'Your fruit has BLACK SPOT ',
-                                style: TextStyle(
-                                  fontFamily: 'Alata',
-                                  fontSize: 25,
+                              RichText(
+                                text: TextSpan(
+                                  style: const TextStyle(
+                                    fontSize: 14.0,
+                                    color: Colors.black,
+                                  ),
+                                  children: <TextSpan>[
+                                    const TextSpan(
+                                      text: 'Your fruit has ',
+                                      style: TextStyle(
+                                        fontFamily: 'Alata',
+                                        fontSize: 25,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                        text: name.toUpperCase(),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Alata',
+                                          fontSize: 20,
+                                        )),
+                                  ],
                                 ),
                               ),
                               Container(
@@ -136,7 +166,10 @@ class _DisplayState extends State<Display> {
                                     ),
                                   ),
                                   textColor: Colors.white,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    urlType(name);
+                                    _launchURL();
+                                  },
                                 ),
                               ),
                             ]),
@@ -164,9 +197,9 @@ class _DisplayState extends State<Display> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
-                              const Text(
-                                'Percentage accuracy: 81% ',
-                                style: TextStyle(
+                              Text(
+                                'Percentage accuracy: $confidence ',
+                                style: const TextStyle(
                                   fontFamily: 'Alata',
                                   fontSize: 25,
                                 ),
@@ -225,22 +258,22 @@ class _DisplayState extends State<Display> {
                     FlatButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(100.0)),
-                      splashColor: Color.fromARGB(255, 144, 147, 150),
+                      splashColor: const Color.fromARGB(255, 144, 147, 150),
                       onPressed: () {
                         _createpdf();
                       },
-                      child: Icon(Icons.download_outlined,
+                      child: const Icon(Icons.download_outlined,
                           color: Color.fromARGB(255, 149, 154, 157), size: 30),
                     ),
                     FlatButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(100.0)),
-                      splashColor: Color.fromARGB(255, 144, 147, 150),
+                      splashColor: const Color.fromARGB(255, 144, 147, 150),
                       onPressed: () {
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
-                      child: Icon(Icons.camera_alt_outlined,
+                      child: const Icon(Icons.camera_alt_outlined,
                           color: Color.fromARGB(255, 149, 154, 157), size: 30),
                     ),
                     // FlatButton(
@@ -263,7 +296,7 @@ class _DisplayState extends State<Display> {
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(100))),
               child: Card(
-                color: Color.fromARGB(200, 24, 143, 71),
+                color: const Color.fromARGB(200, 24, 143, 71),
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(100)),
                 ),
@@ -299,11 +332,15 @@ class _DisplayState extends State<Display> {
 
     PdfGridRow row3 = grid.rows.add();
     row3.cells[0].value = 'Disease Type';
-    row3.cells[1].value = 'Scab';
+    row3.cells[1].value = name;
 
     PdfGridRow row4 = grid.rows.add();
-    row4.cells[0].value = 'Web Search';
-    row4.cells[1].value = 'www.something.com';
+    row4.cells[0].value = 'Accuracy';
+    row4.cells[1].value = confidence;
+
+    PdfGridRow row5 = grid.rows.add();
+    row5.cells[0].value = 'Web Search';
+    row5.cells[1].value = _url;
 
 //Set the row span
     row1.cells[0].columnSpan = 2;
@@ -333,6 +370,10 @@ class _DisplayState extends State<Display> {
     row4.style = PdfGridCellStyle(
         textPen: PdfPens.black,
         font: PdfStandardFont(PdfFontFamily.helvetica, 20));
+
+    row5.style = PdfGridCellStyle(
+        textPen: PdfPens.black,
+        font: PdfStandardFont(PdfFontFamily.helvetica, 20));
 //Draw the grid in PDF document page
     grid.draw(
         page: document.pages.add(),
@@ -342,5 +383,37 @@ class _DisplayState extends State<Display> {
     document.dispose();
 
     saveAndOpenFile(bytes, 'Report.pdf');
+  }
+
+  void _launchURL() async => await canLaunch(_url)
+      ? await launch(_url)
+      : throw 'Could not launch $_url';
+
+  void urlType(name) {
+    if (name == 'HealthyApple') {
+      setState(() {
+        _url = 'https://en.wikipedia.org/wiki/Apple';
+      });
+    } else if (name == 'ScabApple') {
+      setState(() {
+        _url = 'https://en.wikipedia.org/wiki/Apple_scab';
+      });
+    } else if (name == 'RotApple') {
+      setState(() {
+        _url = 'https://ohioline.osu.edu/factsheet/plpath-fru-20';
+      });
+    } else if (name == 'HealthyCitrus') {
+      setState(() {
+        _url = 'https://en.wikipedia.org/wiki/Citrus';
+      });
+    } else if (name == 'ScabCitrus') {
+      setState(() {
+        _url = 'https://aari.punjab.gov.pk/Cit-Dis';
+      });
+    } else {
+      setState(() {
+        _url = 'https://aari.punjab.gov.pk/Cit-Dis';
+      });
+    }
   }
 }

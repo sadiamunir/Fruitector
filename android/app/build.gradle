@@ -57,6 +57,16 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    aaptOptions {
+        noCompress 'tflite'
+        noCompress 'lite'
+    }
+
+    defaultConfig {                                                 
+        minSdkVersion 21
+                                             
+  }  
+
 }
 
 flutter {
@@ -66,3 +76,4 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
+

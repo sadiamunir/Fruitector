@@ -1,0 +1,6 @@
+HealthyApple
+HealthyCitrus
+RotApple
+ScabApple
+ScabCitrus
+SpotCitrus
