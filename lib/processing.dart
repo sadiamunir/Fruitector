@@ -29,7 +29,7 @@ class _ProcessState extends State<Process> {
   loadModel() async {
     var resultant = await Tflite.loadModel(
         labels: 'assets/labels.txt',
-        model: 'assets/final_model_flutter.tflite');
+        model: 'assets/model_unquant.tflite');
     print('After loading model: $resultant');
   }
 
@@ -44,7 +44,7 @@ class _ProcessState extends State<Process> {
       _result = res;
 
       String str = _result![0]['label'];
-      _name = str.substring(0);
+      _name = str.substring(2);
       _confidence = _result != null
           ? (_result![0]['confidence'] * 100.0).toString().substring(0, 2) + "%"
           : "";

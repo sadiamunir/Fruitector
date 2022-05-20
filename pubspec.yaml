@@ -34,8 +34,9 @@ dependencies:
   flutter:
     sdk: flutter
   syncfusion_flutter_pdf: ^18.4.47-beta
-  tflite: ^1.1.1
+  tflite: ^1.1.2
   meta: ^1.1.8
+  image_picker: ^0.8.3+3
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -48,7 +49,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  image_picker: ^0.8.3+3
+  # image_picker: ^0.8.3+3
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -73,9 +74,10 @@ flutter:
     - images/farmer.png
     - images/gallery.png
     - assets/labels.txt
-    - assets/model.tflite
+    # - assets/model.tflite
+    - assets/model_unquant.tflite
 
-    - assets/final_model_flutter.tflite
+    # - assets/final_model_flutter.tflite
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

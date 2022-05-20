@@ -1,6 +1,6 @@
-HealthyApple
-HealthyCitrus
-RotApple
-ScabApple
-ScabCitrus
-SpotCitrus
+0 HealthyApple
+1 HealthyCitrus
+2 RotApple
+3 ScabApple
+4 Scab Citrus
+5 SpotCitrus
