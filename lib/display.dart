@@ -163,7 +163,8 @@ class _DisplayState extends State<Display> {
                                       ),
                                     ),
                                     TextSpan(
-                                        text: name.toUpperCase(),
+                                        text:
+                                            name.toUpperCase() + 'fruitUrdu'.tr,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontFamily: 'Alata',

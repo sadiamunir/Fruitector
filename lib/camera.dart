@@ -96,9 +96,11 @@ class _CameraScreenState extends State<CameraScreen> {
     return Scaffold(
       body: Center(
         child: Stack(
+          alignment: Alignment.topCenter,
           children: [
             Container(
               height: height * 0.25,
+              margin: EdgeInsets.only(bottom: height * 0.75),
               padding: const EdgeInsets.only(
                   top: 10, left: 10, right: 10, bottom: 10),
               color: const Color.fromARGB(200, 24, 143, 71),
@@ -155,7 +157,7 @@ class _CameraScreenState extends State<CameraScreen> {
               top: height * 0.18,
               left: width * 0.07,
               child: Container(
-                height: height * 0.6,
+                height: height * 0.63,
                 width: width * 0.86,
                 decoration: const BoxDecoration(
                   color: Color.fromRGBO(158, 214, 180, 1),
@@ -196,7 +198,7 @@ class _CameraScreenState extends State<CameraScreen> {
                         )
                       : Container(
                           height: height * 0.8,
-                          width: width * 0.6,
+                          width: width * 0.8,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(30),
                             child: Image.file(File((imageFile!.path))),
@@ -209,7 +211,7 @@ class _CameraScreenState extends State<CameraScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(top: height * 0.83),
+                  margin: EdgeInsets.only(top: height * 0.85),
                   padding: const EdgeInsets.all(10),
                   height: height * 0.1,
                   width: width * .42,
@@ -270,7 +272,7 @@ class _CameraScreenState extends State<CameraScreen> {
                 ),
                 Container(
                   padding: const EdgeInsets.all(10),
-                  margin: EdgeInsets.only(top: height * 0.83),
+                  margin: EdgeInsets.only(top: height * 0.85),
                   height: height * 0.1,
                   width: width * .42,
                   decoration: BoxDecoration(
