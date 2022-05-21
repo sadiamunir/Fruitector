@@ -1,7 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fruitector/processing.dart';
+import 'package:fruitector/theme/storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:get/get.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({Key? key}) : super(key: key);
@@ -14,14 +18,25 @@ class _CameraScreenState extends State<CameraScreen> {
   PickedFile? imageFile;
   bool isDisabledBtn = true;
   late double height, width;
+  bool urdu = false;
+
+  void langtoggle() {
+    if (urdu == false) {
+      controller.changelanguage('ur', 'AE');
+      urdu = true;
+    } else {
+      controller.changelanguage('en', 'US');
+      urdu = false;
+    }
+  }
 
   Future<void> _showChoiceDialog(BuildContext context) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text(
-              "Choose option",
+            title: Text(
+              "Choose".tr,
               style: TextStyle(
                 color: Color.fromARGB(200, 24, 143, 71),
               ),
@@ -37,7 +52,7 @@ class _CameraScreenState extends State<CameraScreen> {
                     onTap: () {
                       _openGallery(context);
                     },
-                    title: const Text("Gallery",
+                    title: Text("gallery".tr,
                         style: TextStyle(
                           fontFamily: 'Alata',
                           fontSize: 15,
@@ -55,8 +70,8 @@ class _CameraScreenState extends State<CameraScreen> {
                     onTap: () {
                       _openCamera(context);
                     },
-                    title: const Text(
-                      "Camera",
+                    title: Text(
+                      "camera".tr,
                       style: TextStyle(
                         fontFamily: 'Alata',
                         fontSize: 15,
@@ -102,19 +117,37 @@ class _CameraScreenState extends State<CameraScreen> {
                       },
                     ),
                   ),
-                  const Expanded(
-                    flex: 12,
+                  Expanded(
+                    flex: 8,
                     child: Text(
-                      "Fruit Image Source",
+                      "source".tr,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Alata',
                         fontWeight: FontWeight.bold,
-                        fontSize: 30,
+                        fontSize: 25,
                         color: Colors.white,
                       ),
                     ),
                   ),
+                  Expanded(
+                      flex: 2,
+                      child: Container(
+                        height: height * 0.04,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            primary: Colors.white,
+                            backgroundColor: Color.fromARGB(255, 132, 204, 161),
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50))),
+                          ),
+                          child: Text('lang'.tr),
+                          onPressed: () {
+                            langtoggle();
+                          },
+                        ),
+                      )),
                 ],
               ),
             ),
@@ -143,14 +176,14 @@ class _CameraScreenState extends State<CameraScreen> {
                   child: (imageFile == null)
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
+                          children: <Widget>[
                             Icon(
                               Icons.upload_file_sharp,
                               size: 60,
                               color: Colors.red,
                             ),
                             Text(
-                              "Add image to upload.",
+                              "Add image".tr,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Alata',
@@ -162,8 +195,8 @@ class _CameraScreenState extends State<CameraScreen> {
                           ],
                         )
                       : Container(
-                          height: height * 0.4,
-                          width: width * 0.4,
+                          height: height * 0.8,
+                          width: width * 0.6,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(30),
                             child: Image.file(File((imageFile!.path))),
@@ -199,14 +232,14 @@ class _CameraScreenState extends State<CameraScreen> {
                     child: (imageFile == null)
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const <Widget>[
+                            children: <Widget>[
                               Icon(
                                 Icons.search_outlined,
                                 size: 30,
                                 color: Colors.white,
                               ),
                               Text(
-                                "Add Image",
+                                "Add".tr,
                                 style: TextStyle(
                                   fontFamily: 'Alata',
                                   fontWeight: FontWeight.bold,
@@ -217,14 +250,14 @@ class _CameraScreenState extends State<CameraScreen> {
                           )
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const <Widget>[
+                            children: <Widget>[
                               Icon(
                                 Icons.replay_circle_filled_outlined,
                                 size: 30,
                                 color: Colors.white,
                               ),
                               Text(
-                                "Re-Upload",
+                                "Re".tr,
                                 style: TextStyle(
                                   fontFamily: 'Alata',
                                   fontWeight: FontWeight.bold,
@@ -263,14 +296,14 @@ class _CameraScreenState extends State<CameraScreen> {
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const <Widget>[
+                      children: <Widget>[
                         Icon(
                           Icons.content_paste_go,
                           size: 30,
                           color: Colors.white,
                         ),
                         Text(
-                          "Detect",
+                          "Detect".tr,
                           style: TextStyle(
                             fontFamily: 'Alata',
                             fontWeight: FontWeight.bold,

@@ -6,6 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:async';
 import 'package:fruitector/display.dart';
 import 'package:tflite/tflite.dart';
+import 'package:get/get.dart';
+import 'package:fruitector/theme/storage.dart';
 
 class Process extends StatefulWidget {
   Process({Key? key, this.imageFile});
@@ -18,49 +20,64 @@ class Process extends StatefulWidget {
 class _ProcessState extends State<Process> {
   bool _loading = true;
   bool _isDisabledBtn = true;
-  String txt = 'Processing..';
+  String txt = 'Process'.tr;
   late double height, width;
   late PickedFile imageFile;
 
-  List? _result;
+  late List _result;
+
   String _confidence = "";
   String _name = "";
+  bool urdu = false;
+
+  void langtoggle() {
+    if (urdu == false) {
+      controller.changelanguage('ur', 'AE');
+      urdu = true;
+    } else {
+      controller.changelanguage('en', 'US');
+      urdu = false;
+    }
+  }
 
   loadModel() async {
     var resultant = await Tflite.loadModel(
         labels: 'assets/labels.txt',
-        model: 'assets/model_unquant.tflite');
+        model: 'assets/model_unquant.tflite',
+        numThreads: 1);
+
     print('After loading model: $resultant');
   }
 
   applyImageModel(PickedFile file) async {
     var res = await Tflite.runModelOnImage(
-        path: file.path,
-        numResults: 6,
-        threshold: 0.5,
-        imageMean: 127.5,
-        imageStd: 127.5);
+      path: file.path,
+      numResults: 6,
+      threshold: 0.4,
+      imageMean: 127.5,
+      imageStd: 127.5,
+    );
     setState(() {
-      _result = res;
+      _result = res!;
 
-      String str = _result![0]['label'];
+      String str = _result[0]['label'];
       _name = str.substring(2);
       _confidence = _result != null
-          ? (_result![0]['confidence'] * 100.0).toString().substring(0, 2) + "%"
-          : "";
+          ? (_result[0]['confidence'] * 100.0).toString().substring(0, 2) + "%"
+          : "Insufficient".tr;
     });
+    await Tflite.close();
   }
 
   @override
   void initState() {
     super.initState();
     loadModel();
+    applyImageModel(imageFile);
 
-    Timer(const Duration(seconds: 1, milliseconds: 230), () {
+    Timer(const Duration(seconds: 2), () {
       setState(() {
-        applyImageModel(imageFile);
-
-        txt = 'Processing Complete';
+        txt = 'Processing'.tr;
         _isDisabledBtn = false;
         _loading = false;
       });
@@ -83,7 +100,7 @@ class _ProcessState extends State<Process> {
               padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
               color: const Color.fromARGB(200, 24, 143, 71),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   IconButton(
                     icon: const Icon(
@@ -94,6 +111,23 @@ class _ProcessState extends State<Process> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
+                  ),
+                  SizedBox(width: width * 0.6),
+                  Container(
+                    height: height * 0.04,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        primary: Colors.white,
+                        backgroundColor: Color.fromARGB(255, 132, 204, 161),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50))),
+                      ),
+                      child: Text('lang'.tr),
+                      onPressed: () {
+                        langtoggle();
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -141,14 +175,14 @@ class _ProcessState extends State<Process> {
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: const <Widget>[
+                          children: <Widget>[
                             Icon(
                               Icons.receipt_long,
                               size: 35,
                               color: Colors.white,
                             ),
                             Text(
-                              "See Results",
+                              "See Results".tr,
                               style: TextStyle(
                                 fontFamily: 'Alata',
                                 fontWeight: FontWeight.bold,
@@ -183,14 +217,14 @@ class _ProcessState extends State<Process> {
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: const <Widget>[
+                          children: <Widget>[
                             Icon(
                               Icons.image,
                               size: 35,
                               color: Colors.white,
                             ),
                             Text(
-                              "Re-Upload",
+                              "Re".tr,
                               style: TextStyle(
                                 fontFamily: 'Alata',
                                 fontWeight: FontWeight.bold,
@@ -243,7 +277,12 @@ class _ProcessState extends State<Process> {
                   Container(
                     margin: EdgeInsets.only(top: height * 0.05),
                     padding: const EdgeInsets.all(12.0),
-                    child: _loading ? const LinearProgressIndicator() : null,
+                    child: _loading
+                        ? const LinearProgressIndicator(
+                            backgroundColor: Color.fromARGB(200, 24, 143, 71),
+                            color: Color.fromRGBO(158, 214, 180, 1),
+                          )
+                        : null,
                   ),
                 ],
               ),

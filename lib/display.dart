@@ -6,7 +6,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'mobile.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:url_launcher/url_launcher.dart';
+import 'package:fruitector/info.dart';
+import 'package:get/get.dart';
+import 'package:fruitector/theme/storage.dart';
 
 class Display extends StatefulWidget {
   PickedFile imageimport1;
@@ -29,9 +31,21 @@ class _DisplayState extends State<Display> {
   String name;
   String confidence;
 
-  late final _url;
+  late String detail;
 
   _DisplayState(this.imageimport1, this.confidence, this.name);
+
+  bool urdu = false;
+
+  void langtoggle() {
+    if (urdu == false) {
+      controller.changelanguage('ur', 'AE');
+      urdu = true;
+    } else {
+      controller.changelanguage('en', 'US');
+      urdu = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +77,12 @@ class _DisplayState extends State<Display> {
                       },
                     ),
                   ),
-                  const Expanded(
+                  Expanded(
                     flex: 12,
                     child: Text(
-                      "Your Result",
+                      "Your Result".tr,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Alata',
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
@@ -76,6 +90,25 @@ class _DisplayState extends State<Display> {
                       ),
                     ),
                   ),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      height: height * 0.04,
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          primary: Colors.white,
+                          backgroundColor: Color.fromARGB(255, 132, 204, 161),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50))),
+                        ),
+                        child: Text('lang'.tr),
+                        onPressed: () {
+                          langtoggle();
+                        },
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -122,8 +155,8 @@ class _DisplayState extends State<Display> {
                                     color: Colors.black,
                                   ),
                                   children: <TextSpan>[
-                                    const TextSpan(
-                                      text: 'Your fruit has ',
+                                    TextSpan(
+                                      text: 'fruit'.tr,
                                       style: TextStyle(
                                         fontFamily: 'Alata',
                                         fontSize: 25,
@@ -157,8 +190,8 @@ class _DisplayState extends State<Display> {
                                   ],
                                 ),
                                 child: MaterialButton(
-                                  child: const Text(
-                                    "See More",
+                                  child: Text(
+                                    "See".tr,
                                     style: TextStyle(
                                       fontFamily: 'Alata',
                                       fontWeight: FontWeight.bold,
@@ -167,8 +200,8 @@ class _DisplayState extends State<Display> {
                                   ),
                                   textColor: Colors.white,
                                   onPressed: () {
-                                    urlType(name);
-                                    _launchURL();
+                                    detailAssign(name);
+                                    _navigateToNextScreen(context);
                                   },
                                 ),
                               ),
@@ -198,7 +231,7 @@ class _DisplayState extends State<Display> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               Text(
-                                'Percentage accuracy: $confidence ',
+                                'Percentage'.tr + confidence,
                                 style: const TextStyle(
                                   fontFamily: 'Alata',
                                   fontSize: 25,
@@ -222,8 +255,8 @@ class _DisplayState extends State<Display> {
                                   ],
                                 ),
                                 child: MaterialButton(
-                                  child: const Text(
-                                    "Learn More",
+                                  child: Text(
+                                    "Learn".tr,
                                     style: TextStyle(
                                       fontFamily: 'Alata',
                                       fontWeight: FontWeight.bold,
@@ -260,6 +293,7 @@ class _DisplayState extends State<Display> {
                           borderRadius: BorderRadius.circular(100.0)),
                       splashColor: const Color.fromARGB(255, 144, 147, 150),
                       onPressed: () {
+                        detailAssign(name);
                         _createpdf();
                       },
                       child: const Icon(Icons.download_outlined,
@@ -276,16 +310,6 @@ class _DisplayState extends State<Display> {
                       child: const Icon(Icons.camera_alt_outlined,
                           color: Color.fromARGB(255, 149, 154, 157), size: 30),
                     ),
-                    // FlatButton(
-                    //   shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(100.0)),
-                    //   splashColor: Color.fromARGB(255, 144, 147, 150),
-                    //   onPressed: () {
-                    //     Navigator.pop(context);
-                    //   },
-                    //   child: Icon(Icons.history_outlined,
-                    //       color: Color.fromARGB(255, 149, 154, 157), size: 30),
-                    // ),
                   ],
                 )),
             Container(
@@ -317,6 +341,11 @@ class _DisplayState extends State<Display> {
   Future<void> _createpdf() async {
     PdfDocument document = PdfDocument();
 
+    document.pageSettings.margins.all = 50;
+    document.pageSettings.orientation = PdfPageOrientation.landscape;
+
+    PdfPage page = document.pages.add();
+
     PdfGrid grid = PdfGrid();
 
 //Add columns to grid
@@ -324,28 +353,24 @@ class _DisplayState extends State<Display> {
 
 //Add rows to grid
     PdfGridRow row1 = grid.rows.add();
-    row1.cells[0].value = 'Result Summary';
-
-    PdfGridRow row2 = grid.rows.add();
-    row2.cells[0].value = 'Fruit Name';
-    row2.cells[1].value = 'Apple';
+    row1.cells[0].value = 'summary'.tr;
 
     PdfGridRow row3 = grid.rows.add();
-    row3.cells[0].value = 'Disease Type';
+    row3.cells[0].value = 'type'.tr;
     row3.cells[1].value = name;
 
     PdfGridRow row4 = grid.rows.add();
-    row4.cells[0].value = 'Accuracy';
+    row4.cells[0].value = 'Accuracy'.tr;
     row4.cells[1].value = confidence;
 
     PdfGridRow row5 = grid.rows.add();
-    row5.cells[0].value = 'Web Search';
-    row5.cells[1].value = _url;
+    row5.cells[0].value = 'About' + name + '\n' + detail;
 
 //Set the row span
     row1.cells[0].columnSpan = 2;
+    row5.cells[0].columnSpan = 2;
+
     row1.height = 60;
-    row2.height = 50;
     row3.height = 50;
     row4.height = 50;
 
@@ -358,14 +383,10 @@ class _DisplayState extends State<Display> {
         textBrush: PdfBrushes.darkGreen,
         font: PdfStandardFont(PdfFontFamily.timesRoman, 30));
 
-//Create the PDF grid row style. Assign to second row
-    row2.style = PdfGridCellStyle(
-        textPen: PdfPens.black,
-        font: PdfStandardFont(PdfFontFamily.helvetica, 20));
-
     row3.style = PdfGridCellStyle(
-        textPen: PdfPens.black,
-        font: PdfStandardFont(PdfFontFamily.helvetica, 20));
+      textPen: PdfPens.black,
+      font: PdfStandardFont(PdfFontFamily.helvetica, 20),
+    );
 
     row4.style = PdfGridCellStyle(
         textPen: PdfPens.black,
@@ -375,9 +396,12 @@ class _DisplayState extends State<Display> {
         textPen: PdfPens.black,
         font: PdfStandardFont(PdfFontFamily.helvetica, 20));
 //Draw the grid in PDF document page
-    grid.draw(
-        page: document.pages.add(),
-        bounds: const Rect.fromLTWH(0, 0, 500, 400));
+    PdfLayoutFormat layoutFormat =
+        PdfLayoutFormat(layoutType: PdfLayoutType.paginate);
+
+    grid.draw(page: page, bounds: const Rect.fromLTWH(0, 0, 700, 600));
+
+    grid.style.cellPadding = PdfPaddings(left: 2, right: 2, top: 2, bottom: 2);
 
     List<int> bytes = document.save();
     document.dispose();
@@ -385,35 +409,37 @@ class _DisplayState extends State<Display> {
     saveAndOpenFile(bytes, 'Report.pdf');
   }
 
-  void _launchURL() async => await canLaunch(_url)
-      ? await launch(_url)
-      : throw 'Could not launch $_url';
-
-  void urlType(name) {
+  void detailAssign(name) {
     if (name == 'HealthyApple') {
       setState(() {
-        _url = 'https://en.wikipedia.org/wiki/Apple';
+        detail = 'healthyapple'.tr;
       });
     } else if (name == 'ScabApple') {
       setState(() {
-        _url = 'https://en.wikipedia.org/wiki/Apple_scab';
+        detail = 'scab'.tr;
       });
     } else if (name == 'RotApple') {
       setState(() {
-        _url = 'https://ohioline.osu.edu/factsheet/plpath-fru-20';
+        detail = 'rot'.tr;
       });
     } else if (name == 'HealthyCitrus') {
       setState(() {
-        _url = 'https://en.wikipedia.org/wiki/Citrus';
+        detail = 'healthycitrus'.tr;
       });
     } else if (name == 'ScabCitrus') {
       setState(() {
-        _url = 'https://aari.punjab.gov.pk/Cit-Dis';
+        detail = 'scabcitrus'.tr;
       });
     } else {
       setState(() {
-        _url = 'https://aari.punjab.gov.pk/Cit-Dis';
+        detail = 'spot'.tr;
       });
     }
+  }
+
+  void _navigateToNextScreen(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            infoDisplay(imageFile: imageimport1, detail: detail, name: name)));
   }
 }

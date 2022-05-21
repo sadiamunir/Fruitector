@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fruitector/camera.dart';
+import 'package:get/get.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);
@@ -23,24 +24,24 @@ class _LandingPageState extends State<LandingPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const SizedBox(height: 100),
-            const Text(
-              'make farming easier',
+            Text(
+              'easy'.tr,
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Patrick_Hand',
               ),
             ),
-            const Text(
-              'with',
+            Text(
+              'with'.tr,
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Patrick_Hand',
               ),
             ),
-            const Text(
-              'FRUiTECTOR',
+            Text(
+              'fruitector'.tr,
               style: TextStyle(
                   fontSize: 45.0,
                   color: Color.fromRGBO(14, 82, 41, 1),
@@ -50,7 +51,7 @@ class _LandingPageState extends State<LandingPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Expanded(
-                  flex: 4,
+                  flex: 5,
                   child: Container(
                     height: 60.0,
                     margin: const EdgeInsets.only(left: 50.0, top: 150),
@@ -80,19 +81,19 @@ class _LandingPageState extends State<LandingPage> {
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const <Widget>[
+                            children: <Widget>[
                               Text(
-                                'Start',
+                                'start'.tr,
                                 style: TextStyle(
                                   fontFamily: 'Patrick_Hand',
-                                  fontSize: 25.0,
+                                  fontSize: 23.0,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               Icon(
                                 Icons.keyboard_arrow_right_outlined,
                                 color: Colors.white,
-                                size: 35.0,
+                                size: 25.0,
                               ),
                             ],
                           ),
@@ -102,7 +103,7 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                 ),
                 Expanded(
-                  flex: 4,
+                  flex: 5,
                   child: Stack(
                     children: <Widget>[
                       Container(
