@@ -1,6 +1,6 @@
 {
-    "name": "animal_classification",
-    "short_name": "animal_classification",
+    "name": "fruit_classification",
+    "short_name": "fruit_classification",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
