@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'mobile.dart';
 // ignore: import_of_legacy_library_into_null_safe
+import 'package:url_launcher/url_launcher.dart';
 import 'package:fruitector/info.dart';
 import 'package:get/get.dart';
 import 'package:fruitector/theme/storage.dart';
@@ -30,6 +31,8 @@ class _DisplayState extends State<Display> {
   PickedFile imageimport1;
   String name;
   String confidence;
+
+  late String _url;
 
   late String detail;
 
@@ -265,7 +268,10 @@ class _DisplayState extends State<Display> {
                                     ),
                                   ),
                                   textColor: Colors.white,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                     urlType(name);
+                                    _launchURL();
+                                  },
                                 ),
                               ),
                             ]),
@@ -437,6 +443,45 @@ class _DisplayState extends State<Display> {
       });
     }
   }
+
+  void _launchURL() async => await canLaunch(_url)
+      ? await launch(_url)
+      : throw 'Could not launch $_url';
+
+
+
+  void urlType(name) {
+    if (name == 'HealthyApple') {
+      setState(() {
+        _url = 'https://en.wikipedia.org/wiki/Apple';
+      });
+    } else if (name == 'ScabApple') {
+      setState(() {
+        _url = 'https://en.wikipedia.org/wiki/Apple_scab';
+      });
+    } else if (name == 'RotApple') {
+      setState(() {
+        _url = 'https://ohioline.osu.edu/factsheet/plpath-fru-20';
+      });
+    } else if (name == 'HealthyCitrus') {
+      setState(() {
+        _url = 'https://en.wikipedia.org/wiki/Citrus';
+      });
+    } else if (name == 'ScabCitrus') {
+      setState(() {
+        _url = 'https://aari.punjab.gov.pk/Cit-Dis';
+      });
+    } else {
+      setState(() {
+        _url = 'https://aari.punjab.gov.pk/Cit-Dis';
+      });
+    }
+  }
+
+
+
+
+
 
   void _navigateToNextScreen(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
