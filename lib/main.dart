@@ -1,3 +1,4 @@
+// importing all the necessary packages
 import 'package:flutter/material.dart';
 import 'package:fruitector/landing.dart';
 import 'dart:async';
