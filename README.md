@@ -1,6 +1,6 @@
-# fruitector
+# Fruitector
 
-A new Flutter project.
+A cross-platform nobile application that classifies the fruit diseases at an early stage to avoid the fruit loss and maximize production.
 
 ## Getting Started
 
